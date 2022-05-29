@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=DSView On Docker
+Comment=DSView on docker
+Exec=dsview-onDocker.sh
+Terminal=false
+Type=Application
+Icon=dsview-onDocker
+Categories=Development;
