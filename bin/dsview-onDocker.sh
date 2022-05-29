@@ -8,7 +8,7 @@ mkdir -p "$LOCAL_WORKSPACE" 2> /dev/null
 OPTS=""
 
 # Uncomment following line for GUI support
-# OPTS="${OPTS} --env=DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix"
+OPTS="${OPTS} --env=DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix"
 
 # Uncomment following lines for USB support (replace XXX by USB device mayor number) 
 # OPTS="${OPTS} --device /dev/kvm --group-add kvm"
