@@ -16,7 +16,7 @@ RUN apt-get install -y git git-core build-essential cmake autoconf automake \
                                     libtool pkg-config libglib2.0-dev libzip-dev libudev-dev \
                                     libusb-1.0-0-dev python3-dev qtbase5-dev qtchooser \
                                     qt5-qmake qtbase5-dev-tools qtbase5-dev libboost-dev \
-                                    libboost-test-dev check libfftw3-dev
+                                    libboost-test-dev check libfftw3-dev udev
 
 # Setting up the user
 VOLUME "$APP_HOME"
