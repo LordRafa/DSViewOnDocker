@@ -1,0 +1,3 @@
+SUBSYSTEM=="usb", ATTRS{idVendor}=="2a0e", MODE="0666", RUN+="/usr/local/bin/dsview-onDocker-udev.sh'"
+ACTION=="remove", RUN+="/usr/local/bin/dsview-onDocker-udev.sh'"
+
