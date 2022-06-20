@@ -10,10 +10,9 @@ CONTAINER_NAME="dsview-on-docker"
 OPTS=""
 OPTS="${OPTS} --env=DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix"
 
-docker run --rm -i --name="$CONTAINER_NAME" \
+docker run --rm -it --name="$CONTAINER_NAME" \
 	${OPTS} \
 	--device-cgroup-rule 'c 189:* rwm' \
-    	--net host -v /run/udev/control:/run/udev/control \
 	-v "$LOCAL_HOME:/App_Home" \
 	-v "$LOCAL_WORKSPACE:/App_Home/dsview" \
 	lordrafa/dsview $@

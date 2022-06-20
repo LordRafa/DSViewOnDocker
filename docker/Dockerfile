@@ -13,10 +13,10 @@ ENV DEBIAN_FRONTEND="noninteractive"
 # Installing Dependencies
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y git git-core build-essential cmake autoconf automake \
-                                    libtool pkg-config libglib2.0-dev libzip-dev libudev-dev \
-                                    libusb-1.0-0-dev python3-dev qtbase5-dev qtchooser \
-                                    qt5-qmake qtbase5-dev-tools qtbase5-dev libboost-dev \
-                                    libboost-test-dev check libfftw3-dev udev
+                                    libtool pkg-config libglib2.0-dev libzip-dev \
+                                    python3-dev qtbase5-dev qtchooser qt5-qmake \
+                                    qtbase5-dev-tools qtbase5-dev libboost-dev \
+                                    libboost-test-dev check libfftw3-dev
 
 # Setting up the user
 VOLUME "$APP_HOME"
@@ -33,16 +33,23 @@ RUN chown "$USER:$USER" "/home/$USER"
 ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
 
-ENV DSVIEW_VERSION="master"
-RUN git clone https://github.com/DreamSourceLab/DSView --depth 1 --branch "$DSVIEW_VERSION"; \
-    cd DSView; \
-    cmake .; \
-    make; \
-    make install; \
-    rm -rf DSView
+ENV LIBUSB_VERSION="master"
+RUN git clone https://github.com/libusb/libusb.git --depth 1 --branch "$LIBUSB_VERSION" /tmp/libusb && \
+    cd /tmp/libusb && \
+    autoreconf --install && \
+    mkdir build && cd build && \
+    ../configure --disable-udev && make && make install
+RUN mkdir /dev/bus/usb/099 -p
 
-# Keeping update the image
-RUN apt-get update && apt-get upgrade -y
+ENV DSVIEW_VERSION="master"
+COPY 0001-Dirty-fix-to-give-some-time-to-my-udev-script-so-it-.patch /tmp/
+RUN git clone https://github.com/DreamSourceLab/DSView --depth 1 --branch "$DSVIEW_VERSION" /tmp/DSView && \
+    cd /tmp/DSView && \
+    git config --local user.email "author@example.com" && git config --local user.name "A U Thor" && \
+    git am /tmp/0001-Dirty-fix-to-give-some-time-to-my-udev-script-so-it-.patch && \
+    cmake . && make && make install
+
+# Cleaning up
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 WORKDIR "/home/$USER"
