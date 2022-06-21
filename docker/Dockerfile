@@ -38,8 +38,8 @@ RUN git clone https://github.com/libusb/libusb.git --depth 1 --branch "$LIBUSB_V
     cd /tmp/libusb && \
     autoreconf --install && \
     mkdir build && cd build && \
-    ../configure --disable-udev && make && make install
-RUN mkdir /dev/bus/usb/099 -p
+    ../configure --disable-udev && make && make install && \
+    ln -s /usr/local/lib/libusb-1.0.so.0 /usr/lib/libusb-1.0.so.0
 
 ENV DSVIEW_VERSION="master"
 COPY 0001-Dirty-fix-to-give-some-time-to-my-udev-script-so-it-.patch /tmp/
