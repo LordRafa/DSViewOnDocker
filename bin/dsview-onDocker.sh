@@ -10,6 +10,7 @@ CONTAINER_NAME="dsview-on-docker"
 OPTS=""
 OPTS="${OPTS} --env=DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix"
 
+xhost +local:root
 docker run --rm -i --name="$CONTAINER_NAME" \
 	${OPTS} \
 	-v /dev/null:/dev/bus/usb/099 \
@@ -17,4 +18,4 @@ docker run --rm -i --name="$CONTAINER_NAME" \
 	-v "$LOCAL_HOME:/App_Home" \
 	-v "$LOCAL_WORKSPACE:/App_Home/dsview" \
 	lordrafa/dsview $@
-
+xhost -local:root
