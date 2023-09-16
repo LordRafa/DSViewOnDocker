@@ -1,25 +1,38 @@
-From 7bc4f95c7416dd9f5782cc7028506d5ff6512482 Mon Sep 17 00:00:00 2001
-From: Rafael Waldo Delgado Doblas <cuentas.rwd@rawapro.com>
-Date: Mon, 20 Jun 2022 23:05:19 +0000
+From d101e05cf88dfc9c3651c9657a727f12277c4ec6 Mon Sep 17 00:00:00 2001
+From: Rafael Waldo Delgado Doblas <rawadeldo@protonmail.com>
+Date: Sun, 17 Sep 2023 00:22:47 +0200
 Subject: [PATCH] Dirty fix to give some time to my udev script so it can
  create the dev nodes on the container
 
 ---
- DSView/pv/mainwindow.cpp | 1 +
- 1 file changed, 1 insertion(+)
+ libsigrok4DSL/backend.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/DSView/pv/mainwindow.cpp b/DSView/pv/mainwindow.cpp
-index 55270b5..72ad6b4 100644
---- a/DSView/pv/mainwindow.cpp
-+++ b/DSView/pv/mainwindow.cpp
-@@ -497,6 +497,7 @@ void MainWindow::device_attach()
+diff --git a/libsigrok4DSL/backend.c b/libsigrok4DSL/backend.c
+index d8db5464..eb8bcdde 100644
+--- a/libsigrok4DSL/backend.c
++++ b/libsigrok4DSL/backend.c
+@@ -24,6 +24,7 @@
+ #include "config.h" /* Needed for HAVE_LIBUSB_1_0 and others. */
+ #include "log.h"
+ #include <assert.h>
++#include <unistd.h>
  
- void MainWindow::on_device_attach()
- {
-+    usleep(500 * 1000);
-     SigSession *_session = _control->GetSession();
+ #undef LOG_PREFIX 
+ #define LOG_PREFIX "backend: "
+@@ -379,9 +380,10 @@ LIBUSB_CALL int sr_hotplug_callback(struct libusb_context *ctx, struct libusb_de
+ 	  }
  
-     _session->get_device()->device_updated();
+ 	  int ev = USB_EV_HOTPLUG_UNKNOW;
+-	  if (event == (int)LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED)
++	  if (event == (int)LIBUSB_HOTPLUG_EVENT_DEVICE_ARRIVED) {
++	  	 usleep(500 * 1000);
+ 	  	 ev = USB_EV_HOTPLUG_ATTACH;
+-	  else if (event == (int)LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT)
++	  } else if (event == (int)LIBUSB_HOTPLUG_EVENT_DEVICE_LEFT)
+ 	  	 ev = USB_EV_HOTPLUG_DETTACH;
+ 
+       struct sr_context *user_ctx = (struct sr_context*)user_data;
 -- 
-2.34.1
+2.41.0
 
