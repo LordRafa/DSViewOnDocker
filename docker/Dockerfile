@@ -26,9 +26,6 @@ RUN ln -s "$APP_HOME" "/home/$USER"
 RUN groupadd -g "$GID" -r "$USER"
 RUN useradd -u "$UID" -g "$GID" -r "$USER"
 
-RUN chown "$USER:$USER" "$APP_HOME"
-RUN chown "$USER:$USER" "/home/$USER"
-
 # Provisioning required configs and executables
 ADD entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod 755 /usr/local/bin/entrypoint.sh
