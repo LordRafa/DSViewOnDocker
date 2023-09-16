@@ -1,12 +1,13 @@
-From d101e05cf88dfc9c3651c9657a727f12277c4ec6 Mon Sep 17 00:00:00 2001
+From 92611314fac4fc43854f443bfa06ef45a32753f9 Mon Sep 17 00:00:00 2001
 From: Rafael Waldo Delgado Doblas <rawadeldo@protonmail.com>
-Date: Sun, 17 Sep 2023 00:22:47 +0200
+Date: Sun, 17 Sep 2023 01:18:31 +0200
 Subject: [PATCH] Dirty fix to give some time to my udev script so it can
  create the dev nodes on the container
 
 ---
- libsigrok4DSL/backend.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ libsigrok4DSL/backend.c  | 6 ++++--
+ libsigrok4DSL/lib_main.c | 1 +
+ 2 files changed, 5 insertions(+), 2 deletions(-)
 
 diff --git a/libsigrok4DSL/backend.c b/libsigrok4DSL/backend.c
 index d8db5464..eb8bcdde 100644
@@ -33,6 +34,18 @@ index d8db5464..eb8bcdde 100644
  	  	 ev = USB_EV_HOTPLUG_DETTACH;
  
        struct sr_context *user_ctx = (struct sr_context*)user_data;
+diff --git a/libsigrok4DSL/lib_main.c b/libsigrok4DSL/lib_main.c
+index 080a02e7..9e69f316 100644
+--- a/libsigrok4DSL/lib_main.c
++++ b/libsigrok4DSL/lib_main.c
+@@ -111,6 +111,7 @@ static struct sr_lib_context lib_ctx = {
+  */
+ SR_API int ds_lib_init()
+ {
++    usleep(500 * 1000);
+ 	int ret = 0;
+ 	struct sr_dev_driver **drivers = NULL;
+ 	struct sr_dev_driver **dr = NULL;
 -- 
 2.41.0
 
